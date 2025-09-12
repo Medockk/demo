@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: demo
+    version: 1.0.0
+
+  datasource:
+    url: jdbc:postgresql://aws-0-eu-north-1.pooler.supabase.com:6543/postgres?prepareThreshold=0
+    username: postgres.bxyncqawvvfrtzxmqvfa
+    password: qwe1@3QWEv2
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 1
+      minimum-idle: 0
+      idle-timeout: 10000
+      max-lifetime: 30000
+      connection-timeout: 20000
+
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+
+firebase:
+  api-key: AIzaSyADcu2FgZbVq3YHwdOik-n4iEbfaOjMO24
+
+server:
+  address: 192.168.0.102
+  port: 8088
