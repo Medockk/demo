@@ -38,3 +38,4 @@ out/
 
 ### Kotlin ###
 .kotlin
+demo/src/main/resources/firebase-admin-sdk.json
