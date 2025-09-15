@@ -1,6 +1,12 @@
 package com.foodback.demo.service
 
-import com.foodback.demo.model.*
+import com.foodback.demo.exception.auth.BadRequestException
+import com.foodback.demo.model.RefreshRequestModel
+import com.foodback.demo.model.RefreshResponseModel
+import com.foodback.demo.model.request.auth.SignInRequest
+import com.foodback.demo.model.request.auth.SignUpRequest
+import com.foodback.demo.model.response.auth.AuthResponse
+import com.foodback.demo.model.response.auth.FirebaseResponse
 import com.foodback.demo.repository.UserRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
@@ -32,7 +38,14 @@ class FirebaseAuthService(
             .uri("/v1/accounts:signUp?key=$apiKey")
             .bodyValue(signUpRequest)
             .retrieve()
+            .onStatus({it.isError}) {
+                it.bodyToMono(String::class.java)
+                    .flatMap { cause ->
+                        Mono.error(RuntimeException("Firebase exception is $cause"))
+                    }
+            }
             .bodyToMono(FirebaseResponse::class.java)
+            .retry(3)
             .block()!!
 
         val entity = response.toUserEntity().apply {
@@ -56,7 +69,7 @@ class FirebaseAuthService(
             .onStatus({ it.isError }) { response ->
                 response.bodyToMono(String::class.java)
                     .flatMap {
-                        Mono.error(RuntimeException("Firebase exception $it"))
+                        Mono.error(RuntimeException("Firebase Exception is $it"))
                     }
             }
             .bodyToMono(FirebaseResponse::class.java)
@@ -80,44 +93,17 @@ class FirebaseAuthService(
                     .with("refresh_token", requestModel.refreshToken)
             )
             .retrieve()
-            .onStatus({ it.isError }) {
-                it.bodyToMono(String::class.java).flatMap { cause ->
-                    Mono.error(RuntimeException("Token exception $cause"))
-                }
+            .onStatus({ it.isError }) { response ->
+                response.bodyToMono(String::class.java)
+                    .flatMap {
+                        Mono.error(BadRequestException("Token Exception is $it"))
+                    }
             }
             .bodyToMono(RefreshResponseModel::class.java)
             .block()!!
 
-        return response
-    }
+        print("\n\n\n$response\n\n\n")
 
-    private data class FirebaseResponse(
-        val idToken: String,
-        val refreshToken: String,
-        val expiresIn: String,
-        val localId: String,
-        val email: String?,
-        val name: String?,
-        val displayName: String?,
-        val photoUrl: String? = null
-    ){
-        fun toAuthResponse() =
-            AuthResponse(
-                uid = localId,
-                email = email ?: "",
-                role = "",
-                idToken = idToken,
-                refreshToken = refreshToken,
-                expiresIn = expiresIn.toLongOrNull() ?: 3600L
-            )
-        
-        fun toUserEntity() =
-            UserEntity(
-                uid = localId,
-                email = email ?: "",
-                name = displayName,
-                role = "",
-                photoUrl = photoUrl
-            )
+        return response
     }
 }

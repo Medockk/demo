@@ -1,30 +1,10 @@
-package com.foodback.demo.model
+package com.foodback.demo.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import java.time.Instant
-
-data class SignInRequest(
-    val email: String,
-    val password: String,
-    val returnSecureToken: Boolean = true,
-)
-data class SignUpRequest(
-    val email: String,
-    val password: String,
-    val returnSecureToken: Boolean = true
-)
-
-data class AuthResponse(
-    val uid: String,
-    val email: String,
-    val role: String,
-    val idToken: String,
-    val refreshToken: String,
-    val expiresIn: Long
-)
 
 @Entity
 @Table(name = "users")
