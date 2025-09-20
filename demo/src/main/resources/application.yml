@@ -22,9 +22,13 @@ spring:
     properties:
       hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
 
+logging:
+  level:
+    org.springframework.security: DEBUG
+
 firebase:
   api-key: AIzaSyADcu2FgZbVq3YHwdOik-n4iEbfaOjMO24
 
 server:
-  address: 192.168.0.105
+  address: 192.168.100.156
   port: 8088

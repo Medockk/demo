@@ -1,4 +1,4 @@
-package com.foodback.demo.exception
+package com.foodback.demo.exception.general
 
 data class GlobalErrorResponse(
     val error: String,

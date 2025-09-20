@@ -1,11 +1,6 @@
-package com.foodback.demo.model
+package com.foodback.demo.dto.response.auth
 
 import com.fasterxml.jackson.annotation.JsonProperty
-
-data class RefreshRequestModel(
-    @JsonProperty("refresh_token") val refreshToken: String,
-    @JsonProperty("grant_type") val grantType: String = "refresh_token"
-)
 
 data class RefreshResponseModel(
     @JsonProperty("id_token") val idToken: String,
@@ -16,4 +11,3 @@ data class RefreshResponseModel(
     @JsonProperty("token_type") val tokenType: String,
     @JsonProperty("access_token") val accessToken: String
 )
-

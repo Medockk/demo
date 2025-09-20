@@ -1,4 +1,4 @@
-package com.foodback.demo.model.request.auth
+package com.foodback.demo.dto.request.auth
 
 data class SignInRequest(
     val email: String,

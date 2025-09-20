@@ -1,25 +1,33 @@
 package com.foodback.demo.exception.handler
 
-import com.foodback.demo.exception.GlobalErrorResponse
+import com.foodback.demo.exception.general.GlobalErrorResponse
 import com.foodback.demo.exception.auth.BadRequestException
+import com.foodback.demo.exception.auth.CookieNotFoundException
+import com.foodback.demo.exception.auth.TokenVerificationFailedException
 import com.foodback.demo.exception.auth.UserNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
-import java.net.SocketException
-import java.util.concurrent.TimeoutException
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 
 @RestControllerAdvice
-class AuthExceptionHandler {
+class AuthExceptionHandler: ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(UserNotFoundException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    fun onUserNotFound(e: UserNotFoundException) = mapOf(
-        "errorCode" to "USER_NOT_FOUND",
-        "message" to e.message
-    )
+    fun onUserNotFound(e: UserNotFoundException): ResponseEntity<GlobalErrorResponse> {
+        return ResponseEntity
+            .status(HttpStatus.NOT_FOUND)
+            .body(
+                GlobalErrorResponse(
+                    error = "User not found!",
+                    message = e.message ?: e.localizedMessage ?: "Oops...user not found",
+                    code = HttpStatus.NOT_FOUND.value()
+                )
+            )
+    }
 
     @ExceptionHandler(BadRequestException::class)
     fun handleBadRequest(exception: BadRequestException): ResponseEntity<GlobalErrorResponse> {
@@ -33,54 +41,29 @@ class AuthExceptionHandler {
                 )
             )
     }
-
-    @ExceptionHandler(RuntimeException::class)
-    fun handleRuntimeException(exception: RuntimeException): ResponseEntity<GlobalErrorResponse> {
+    @ExceptionHandler(CookieNotFoundException::class)
+    fun handleCookieNotFoundException(exception: CookieNotFoundException):
+            ResponseEntity<GlobalErrorResponse> {
         return ResponseEntity
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .status(HttpStatus.BAD_REQUEST)
             .body(
                 GlobalErrorResponse(
-                    error = "Runtime Exception",
+                    error = "Cookie not found exception",
                     message = exception.message ?: "Unknown exception...",
                     code = HttpStatus.BAD_REQUEST.value()
                 )
             )
     }
-
-    @ExceptionHandler(Exception::class)
-    fun handleGeneralException(exception: Exception): ResponseEntity<GlobalErrorResponse> {
+    @ExceptionHandler(TokenVerificationFailedException::class)
+    fun handleTokenVerificationFailed(exception: TokenVerificationFailedException):
+            ResponseEntity<GlobalErrorResponse> {
         return ResponseEntity
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .status(HttpStatus.UNAUTHORIZED)
             .body(
                 GlobalErrorResponse(
-                    error = "Internal server error",
+                    error = "Token verification failed",
                     message = exception.message ?: "Unknown exception...",
-                    code = HttpStatus.INTERNAL_SERVER_ERROR.value()
-                )
-            )
-    }
-
-    @ExceptionHandler(SocketException::class)
-    fun handleSocketException(exception: SocketException): ResponseEntity<GlobalErrorResponse> {
-        return ResponseEntity
-            .status(HttpStatus.BAD_GATEWAY)
-            .body(
-                GlobalErrorResponse(
-                    error = "Network Exception",
-                    message = "Network error when accessing a remote service: ${exception.message}",
-                    code = HttpStatus.BAD_GATEWAY.value()
-                )
-            )
-    }
-    @ExceptionHandler(TimeoutException::class)
-    fun handleTimeoutException(exception: TimeoutException): ResponseEntity<GlobalErrorResponse> {
-        return ResponseEntity
-            .status(HttpStatus.GATEWAY_TIMEOUT)
-            .body(
-                GlobalErrorResponse(
-                    error = "Timeout Exception",
-                    message = "Oops...server throw timeout exception with message: ${exception.message}",
-                    code = HttpStatus.GATEWAY_TIMEOUT.value()
+                    code = HttpStatus.UNAUTHORIZED.value()
                 )
             )
     }
