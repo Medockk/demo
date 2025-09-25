@@ -12,9 +12,15 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 
+/**
+ * Rest controller advice to handle Auth Exceptions
+ */
 @RestControllerAdvice
 class AuthExceptionHandler: ResponseEntityExceptionHandler() {
 
+    /**
+     * Handle [UserNotFoundException]
+     */
     @ExceptionHandler(UserNotFoundException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     fun onUserNotFound(e: UserNotFoundException): ResponseEntity<GlobalErrorResponse> {
@@ -29,6 +35,9 @@ class AuthExceptionHandler: ResponseEntityExceptionHandler() {
             )
     }
 
+    /**
+     * Handle [BadRequestException]
+     */
     @ExceptionHandler(BadRequestException::class)
     fun handleBadRequest(exception: BadRequestException): ResponseEntity<GlobalErrorResponse> {
         return ResponseEntity
@@ -41,6 +50,10 @@ class AuthExceptionHandler: ResponseEntityExceptionHandler() {
                 )
             )
     }
+
+    /**
+     * Handle [CookieNotFoundException]
+     */
     @ExceptionHandler(CookieNotFoundException::class)
     fun handleCookieNotFoundException(exception: CookieNotFoundException):
             ResponseEntity<GlobalErrorResponse> {
@@ -54,6 +67,10 @@ class AuthExceptionHandler: ResponseEntityExceptionHandler() {
                 )
             )
     }
+
+    /**
+     * Handle [TokenVerificationFailedException]
+     */
     @ExceptionHandler(TokenVerificationFailedException::class)
     fun handleTokenVerificationFailed(exception: TokenVerificationFailedException):
             ResponseEntity<GlobalErrorResponse> {

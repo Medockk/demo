@@ -13,15 +13,29 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.filter.OncePerRequestFilter
 
+/**
+ * Class to verify all request to server except /api/auth
+ */
 class FirebaseAuthFilter(
     private val userRepository: UserRepository
 ) : OncePerRequestFilter() {
 
+    /**
+     * Method for excluding the /api/auth endpoint from JWT token verification
+     */
     override fun shouldNotFilter(request: HttpServletRequest): Boolean {
         val path = request.requestURI
         return path.startsWith("/api/auth")
     }
 
+    /**
+     * If request have header Authorization Bearer jwt OR Cookie with jwt,
+     * and this jwt token successfully verified, request will proceed,
+     * overrise this request will cause 401 Unauthorized Exception
+     * @throws UserNotFoundException If user with this email doesn't have in database
+     * @throws FirebaseAuthException If JWT token invalid
+     * @throws Exception If JWT token not found
+     */
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
@@ -60,7 +74,6 @@ class FirebaseAuthFilter(
                 null,
                 roles + permissions
             )
-            println(auth)
             SecurityContextHolder.getContext().authentication = auth
             request.setAttribute("uid", decodedToken.uid)
 
@@ -74,6 +87,9 @@ class FirebaseAuthFilter(
         }
     }
 
+    /**
+     * Method to exact JWT token from request
+     */
     private fun exactToken(request: HttpServletRequest): String? {
         val header = request.getHeader("Authorization")
         if (header != null && header.startsWith("Bearer ")) {

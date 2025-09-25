@@ -6,6 +6,9 @@ import com.google.firebase.FirebaseOptions
 import jakarta.annotation.PostConstruct
 import org.springframework.context.annotation.Configuration
 
+/**
+ * Configuration to exact firebase-admin-sdk.json and initialize FirebaseApp with this admin-sdk
+ */
 @Configuration
 class FirebaseAuthConfig {
 

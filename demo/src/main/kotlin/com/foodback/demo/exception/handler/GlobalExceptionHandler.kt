@@ -9,9 +9,15 @@ import java.io.IOException
 import java.net.SocketException
 import java.util.concurrent.TimeoutException
 
+/**
+ * Rest controller advice to handle general error like server error
+ */
 @RestControllerAdvice
 class GlobalExceptionHandler {
 
+    /**
+     * Handle [RuntimeException]
+     */
     @ExceptionHandler(RuntimeException::class)
     fun handleRuntimeException(exception: RuntimeException): ResponseEntity<GlobalErrorResponse> {
         return ResponseEntity
@@ -25,6 +31,9 @@ class GlobalExceptionHandler {
             )
     }
 
+    /**
+     * Handle all [Exception]
+     */
     @ExceptionHandler(Exception::class)
     fun handleGeneralException(exception: Exception): ResponseEntity<GlobalErrorResponse> {
         return ResponseEntity
@@ -37,6 +46,10 @@ class GlobalExceptionHandler {
                 )
             )
     }
+
+    /**
+     * Handle [IOException]
+     */
     @ExceptionHandler(IOException::class)
     fun handleIOException(exception: IOException): ResponseEntity<GlobalErrorResponse> {
         return ResponseEntity
@@ -50,6 +63,9 @@ class GlobalExceptionHandler {
             )
     }
 
+    /**
+     * Handle [SocketException]
+     */
     @ExceptionHandler(SocketException::class)
     fun handleSocketException(exception: SocketException): ResponseEntity<GlobalErrorResponse> {
         return ResponseEntity
@@ -62,6 +78,10 @@ class GlobalExceptionHandler {
                 )
             )
     }
+
+    /**
+     * Handle [TimeoutException]
+     */
     @ExceptionHandler(TimeoutException::class)
     fun handleTimeoutException(exception: TimeoutException): ResponseEntity<GlobalErrorResponse> {
         return ResponseEntity

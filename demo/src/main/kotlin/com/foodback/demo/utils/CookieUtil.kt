@@ -4,6 +4,9 @@ import com.foodback.demo.exception.auth.CookieNotFoundException
 import jakarta.servlet.http.Cookie
 import org.springframework.stereotype.Component
 
+/**
+ * Utility to create JWT Token and exact JWT token from Cookies
+ */
 @Component
 class CookieUtil {
 

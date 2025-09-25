@@ -10,6 +10,9 @@ import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.access.AccessDeniedHandler
 import org.springframework.stereotype.Component
 
+/**
+ * Custom handler for 401 HTTP-error
+ */
 @Component
 class CustomAuthenticationEntryPoint : AuthenticationEntryPoint {
 

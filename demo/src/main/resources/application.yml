@@ -15,7 +15,6 @@ spring:
       max-lifetime: 30000
       connection-timeout: 20000
 
-
   jpa:
     hibernate:
       ddl-auto: update
@@ -25,10 +24,15 @@ spring:
 logging:
   level:
     org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
 
 firebase:
   api-key: AIzaSyADcu2FgZbVq3YHwdOik-n4iEbfaOjMO24
 
+supabase:
+  url: https://bxyncqawvvfrtzxmqvfa.supabase.co
+  key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ4eW5jcWF3dnZmcnR6eG1xdmZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkxMDg3MDQsImV4cCI6MjA2NDY4NDcwNH0.iiG8uC92uzUDuzPQ5sMTj4ilGE5rGV-HQGrg_MXRGDo
+
 server:
-  address: 192.168.100.156
+  address: 192.168.100.164
   port: 8088
